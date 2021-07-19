@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.alert-error   {
+    background-color:transparent;
+    @apply py-0;
+}
