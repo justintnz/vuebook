@@ -37,15 +37,19 @@ class AuthService {
         },
       })
       .then((response) => {
-        console.log(response.data);
-        if (response.data.data.login.access_token) {
-          localStorage.setItem(
-            "auth",
-            JSON.stringify(response.data.data.login)
-          );
+        var data = response.data.data ?? response.data;
+        //  check if graphql response with a token
+        if (data.login && data.login.access_token && data.login.user) {
+          data.login.user.access_token = data.login.access_token;
+          localStorage.setItem("auth", JSON.stringify(data.login.user));
+          return data.login.user;
         }
-
-        return response.data;
+        // if not check if there is an error
+        if (data.errors) {
+          return data.errors[0] ?? data.errors;
+        }
+        // if not then something wrong happened
+        return { message: "something went wrong!!!" };
       });
   }
 

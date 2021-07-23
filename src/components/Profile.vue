@@ -1,8 +1,8 @@
 <template>
-  <div class="container">
+  <div v-if="!!currentUser" class="container">
     <header class="jumbotron">
       <h3>
-        <strong>{{ currentUser.name }}</strong>
+        <strong>{{ currentUser.name ? currentUser.name : "" }}</strong>
         Profile
       </h3>
     </header>
@@ -17,7 +17,7 @@
     </p>
     <p>
       <strong>Name:</strong>
-      {{ currentUser.name }}
+      {{ currentUser.name ? currentUser.name : "" }}
     </p>
     <p>
       <strong>Email:</strong>
@@ -32,11 +32,8 @@ import { mapGetters } from "vuex";
 export default {
   name: "Profile",
   computed: {
-    currentUser() {
-      return this.$store.getters["auth/stateUser"];
-    },
     ...mapGetters({
-      stateUser: "auth/stateUser",
+      currentUser: "auth/stateUser",
       stateToken: "auth/stateToken",
     }),
   },

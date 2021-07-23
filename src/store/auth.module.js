@@ -2,17 +2,12 @@ import AuthService from "../services/auth.service";
 
 const localAuth = JSON.parse(localStorage.getItem("auth"));
 const state = localAuth
-  ? {
-      status: { loggedIn: true },
-      user: localAuth.user,
-      token: localAuth.access_token,
-    }
-  : { status: { loggedIn: false }, user: null, token: null };
+  ? { status: { loggedIn: true }, user: localAuth }
+  : { status: { loggedIn: false }, user: null };
 const getters = {
-  isAuthenticated: (state) => !!state.user,
-  statePosts: (state) => state.posts,
+  isAuthenticated: (state) => !!state.user && !!state.user.access_token,
   stateUser: (state) => state.user,
-  stateToken: (state) => state.token,
+  stateToken: (state) => (state.user ? state.user.access_token : ""),
 };
 export const auth = {
   namespaced: true,
@@ -21,9 +16,14 @@ export const auth = {
   actions: {
     login({ commit }, user) {
       return AuthService.login(user).then(
-        (user) => {
-          commit("loginSuccess", user);
-          return Promise.resolve(user);
+        (res) => {
+          if (res.access_token) {
+            commit("loginSuccess");
+            return Promise.resolve(res);
+          } else {
+            commit("loginFailure");
+            return Promise.reject(res);
+          }
         },
         (error) => {
           commit("loginFailure");
@@ -49,23 +49,31 @@ export const auth = {
     },
   },
   mutations: {
-    loginSuccess(state, user) {
+    loginSuccess(state) {
+      let auth = JSON.parse(localStorage.getItem("auth"));
       state.status.loggedIn = true;
-      state.user = user;
+      state.user = auth;
+      state.token = auth.access_token;
     },
     loginFailure(state) {
       state.status.loggedIn = false;
       state.user = null;
+      state.token = null;
     },
     logout(state) {
       state.status.loggedIn = false;
       state.user = null;
+      state.token = null;
     },
     registerSuccess(state) {
       state.status.loggedIn = false;
+      state.user = null;
+      state.token = null;
     },
     registerFailure(state) {
       state.status.loggedIn = false;
+      state.user = null;
+      state.token = null;
     },
   },
 };
