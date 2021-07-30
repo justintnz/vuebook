@@ -5,7 +5,7 @@ import Logout from "../components/Logout.vue";
 
 // lazy-loaded
 const Profile = () => import("../components/Profile.vue");
-const BoardAdmin = () => import("../components/BoardAdmin.vue");
+const Booking = () => import("../components/Booking.vue");
 
 const routes = [
   {
@@ -32,10 +32,10 @@ const routes = [
     component: Profile,
   },
   {
-    path: "/admin",
-    name: "admin",
+    path: "/booking",
+    name: "booking",
     // lazy-loaded
-    component: BoardAdmin,
+    component: Booking,
   },
 ];
 

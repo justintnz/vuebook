@@ -1,7 +1,5 @@
 import axios from "axios";
 
-const GQL_URL = "http://bot2.test/graphql";
-
 class AuthService {
   login(user) {
     const body = {
@@ -29,28 +27,21 @@ class AuthService {
       },
     };
 
-    return axios
-      .post(GQL_URL, body, {
-        headers: {
-          "Content-Type": "application/json",
-          "X-REQUEST-TYPE": "GraphQL",
-        },
-      })
-      .then((response) => {
-        var data = response.data.data ?? response.data;
-        //  check if graphql response with a token
-        if (data.login && data.login.access_token && data.login.user) {
-          data.login.user.access_token = data.login.access_token;
-          localStorage.setItem("auth", JSON.stringify(data.login.user));
-          return data.login.user;
-        }
-        // if not check if there is an error
-        if (data.errors) {
-          return data.errors[0] ?? data.errors;
-        }
-        // if not then something wrong happened
-        return { message: "something went wrong!!!" };
-      });
+    return axios.post("", body).then((response) => {
+      var data = response.data.data ?? response.data;
+      //  check if graphql response with a token
+      if (data.login && data.login.access_token && data.login.user) {
+        data.login.user.access_token = data.login.access_token;
+        localStorage.setItem("auth", JSON.stringify(data.login.user));
+        return data.login.user;
+      }
+      // if not check if there is an error
+      if (data.errors) {
+        return data.errors[0] ?? data.errors;
+      }
+      // if not then something wrong happened
+      return { message: "something went wrong!!!" };
+    });
   }
 
   logout() {
@@ -58,7 +49,7 @@ class AuthService {
   }
 
   register(user) {
-    return axios.post(GQL_URL + "signup", {
+    return axios.post("signup", {
       username: user.username,
       email: user.email,
       password: user.password,

@@ -5,13 +5,10 @@
     </div>
     <div class="navbar-center hidden px-2 mx-2 lg:flex">
       <div class="flex items-stretch">
-        <a class="btn btn-ghost btn-sm rounded-btn"> Home </a>
-        <a class="btn btn-ghost btn-sm rounded-btn"> Portfolio </a>
-        <a class="btn btn-ghost btn-sm rounded-btn"> About </a>
-        <a
-          v-if="isAuthenticated"
-          class="btn btn-ghost btn-sm rounded-btn"
-          @click.prevent="logout"
+        <router-link class="mx-3 btn" to="home">Home</router-link>
+        <router-link class="mx-3 btn" to="about">About</router-link>
+        <router-link class="mx-3 btn" to="booking">Booking</router-link>
+        <a v-if="isAuthenticated" class="mx-3 btn" @click.prevent="logout"
           >Logout</a
         >
       </div>
