@@ -59,7 +59,9 @@
                 <div class="avatar">
                   <div class="w-12 h-12 mask mask-squircle">
                     <img
-                      :src="`https://i.pravatar.cc/60?u=${booking.customer.name}`"
+                      :src="`https://i.pravatar.cc/60?u=${this.hash(
+                        booking.customer.name
+                      )}`"
                     />
                   </div>
                 </div>
@@ -89,6 +91,7 @@
 <script>
 import axios from "axios";
 import { mapGetters } from "vuex";
+import crypto from "crypto-js";
 
 export default {
   name: "Booking",
@@ -122,11 +125,13 @@ export default {
           to: this.search.to,
         },
       };
-
       axios.post("", body).then((response) => {
         console.log(response.data.data);
         this.bookings = response.data.data.bookings ?? response.data.bookings;
       });
+    },
+    hash: function (str) {
+      return crypto.MD5(str);
     },
   },
 };
