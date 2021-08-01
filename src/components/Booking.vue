@@ -68,7 +68,7 @@
                 <div class="font-bold">{{ booking.customer.name }}</div>
               </div>
             </td>
-            <td>{{ booking.service_id }}</td>
+            <td>{{ getServiceById(booking.service_id).name }}</td>
             <th>
               <button class="btn btn-ghost btn-xs">details</button>
             </th>
@@ -107,14 +107,20 @@ export default {
     ...mapGetters({
       currentUser: "auth/stateUser",
       stateToken: "auth/stateToken",
+      getServiceById: "app/getServiceById",
     }),
   },
   mounted() {
+    if (!this.services) {
+      this.$store.dispatch("app/loadServices");
+    }
+
     this.searchBooking();
   },
   methods: {
     searchBooking: function () {
-      console.log("searchBooking");
+      console.log(this.getServiceById(1));
+
       const body = {
         query: `
         query start_at($from: Date!, $to: Date!){ 
@@ -126,7 +132,6 @@ export default {
         },
       };
       axios.post("", body).then((response) => {
-        console.log(response.data.data);
         this.bookings = response.data.data.bookings ?? response.data.bookings;
       });
     },
